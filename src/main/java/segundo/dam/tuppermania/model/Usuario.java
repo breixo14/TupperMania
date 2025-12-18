@@ -2,6 +2,8 @@ package segundo.dam.tuppermania.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "usuario")
 public class Usuario {
@@ -16,11 +18,9 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private Rol rol; // Debes crear el Enum Rol
 
-    // Relación 1:1 con PerfilFisico
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private PerfilFisico perfilFisico;
 
-    // Relación 1:N con PlanNutricional
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<PlanNutricional> planes;
 }
