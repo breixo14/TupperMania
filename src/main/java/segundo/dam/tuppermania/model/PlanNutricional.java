@@ -4,6 +4,7 @@ package segundo.dam.tuppermania.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "plan_nutricional")

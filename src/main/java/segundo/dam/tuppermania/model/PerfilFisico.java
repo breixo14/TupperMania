@@ -1,6 +1,7 @@
 package segundo.dam.tuppermania.model;
 
 import jakarta.persistence.*;
+import segundo.dam.tuppermania.model.enums.Sexo;
 
 @Entity
 @Table(name = "perfil_fisico")

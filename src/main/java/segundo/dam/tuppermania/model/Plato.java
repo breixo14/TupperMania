@@ -2,6 +2,8 @@ package segundo.dam.tuppermania.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "plato")
 public class Plato {
