@@ -1,6 +1,8 @@
 package segundo.dam.tuppermania.model;
 
 import jakarta.persistence.*;
+import segundo.dam.tuppermania.model.enums.NivelActividad;
+import segundo.dam.tuppermania.model.enums.Objetivo;
 import segundo.dam.tuppermania.model.enums.Sexo;
 
 @Entity
@@ -20,6 +22,13 @@ public class PerfilFisico {
 
     @Enumerated(EnumType.STRING)
     private Sexo sexo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "nivel_actividad")
+    private NivelActividad nivelActividad;
+
+    @Enumerated(EnumType.STRING)
+    private Objetivo objetivo;
 
     @OneToOne
     @JoinColumn(name = "id_usuario") // Apunta a la columna física en la DB
@@ -90,4 +99,12 @@ public class PerfilFisico {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+
+    public NivelActividad getNivelActividad() { return nivelActividad; }
+
+    public void setNivelActividad(NivelActividad nivelActividad) { this.nivelActividad = nivelActividad; }
+
+    public Objetivo getObjetivo() { return objetivo; }
+
+    public void setObjetivo(Objetivo objetivo) { this.objetivo = objetivo; }
 }
