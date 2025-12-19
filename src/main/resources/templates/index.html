@@ -12,13 +12,20 @@
     <h1 class="display-4">Bienvenido a TupperMania 🥦</h1>
     <p class="lead">Planifica tus comidas de forma inteligente.</p>
 
-    <div sec:authorize="isAuthenticated()" class="alert alert-success mt-4">
-        <h4>¡Hola, <span sec:authentication="name"></span>!</h4>
-        <p>Ya estás dentro. Pronto podrás ver tus planes aquí.</p>
-    </div>
+    <div sec:authorize="isAuthenticated()" class="mt-4">
+        <div class="alert alert-success">
+            <h4>¡Hola, <span sec:authentication="name"></span>!</h4>
+            <p>Bienvenido de nuevo a TupperMania.</p>
+        </div>
 
-    <div sec:authorize="!isAuthenticated()" class="mt-4">
-        <p>Regístrate para empezar a crear tu dieta.</p>
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <a href="/perfil/nuevo" class="btn btn-primary btn-lg shadow">
+                📝 Completar mi Perfil Físico
+            </a>
+            <a href="#" class="btn btn-outline-success btn-lg shadow disabled">
+                🥗 Ver mis Dietas (Próximamente)
+            </a>
+        </div>
     </div>
 </div>
 </body>
