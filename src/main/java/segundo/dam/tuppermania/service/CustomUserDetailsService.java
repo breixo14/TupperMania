@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import segundo.dam.tuppermania.model.Usuario;
 import segundo.dam.tuppermania.repository.UsuarioRepository;
-
 import java.util.Collections;
 
 @Service
@@ -21,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String correo) throws UsernameNotFoundException {
         Usuario usuario = usuarioRepository.findByCorreo(correo)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con correo: " + correo));
+                .orElseThrow(() -> new UsernameNotFoundException("No existe el usuario: " + correo));
 
         return new User(
                 usuario.getCorreo(),
