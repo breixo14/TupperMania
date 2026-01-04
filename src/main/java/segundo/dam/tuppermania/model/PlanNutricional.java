@@ -24,6 +24,9 @@ public class PlanNutricional {
     @Column(name = "calorias_totales")
     private Integer caloriasTotales;
 
+    @Column(length = 5000)
+    private String listaCompraResumida;
+
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
@@ -88,4 +91,7 @@ public class PlanNutricional {
     public void setPlatosAsignados(List<PlanPlato> platosAsignados) {
         this.planPlatos = platosAsignados;
     }
+
+    public String getListaCompraResumida() { return listaCompraResumida; }
+    public void setListaCompraResumida(String listaCompraResumida) { this.listaCompraResumida = listaCompraResumida; }
 }
