@@ -2,6 +2,7 @@ package segundo.dam.tuppermania.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,12 +24,15 @@ public class PlanNutricional {
     @Column(name = "calorias_totales")
     private Integer caloriasTotales;
 
+    @Column(length = 5000)
+    private String listaCompraResumida;
+
     @ManyToOne
-    @JoinColumn(name = "id_usuario") // Consistente con el id_usuario de la tabla Usuario
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
-    private List<PlanPlato> platosAsignados;
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<PlanPlato> planPlatos = new ArrayList<>();
 
     // --- GETTERS Y SETTERS ---
 
@@ -81,10 +85,13 @@ public class PlanNutricional {
     }
 
     public List<PlanPlato> getPlatosAsignados() {
-        return platosAsignados;
+        return planPlatos;
     }
 
     public void setPlatosAsignados(List<PlanPlato> platosAsignados) {
-        this.platosAsignados = platosAsignados;
+        this.planPlatos = platosAsignados;
     }
+
+    public String getListaCompraResumida() { return listaCompraResumida; }
+    public void setListaCompraResumida(String listaCompraResumida) { this.listaCompraResumida = listaCompraResumida; }
 }

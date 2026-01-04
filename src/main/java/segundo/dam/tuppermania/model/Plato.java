@@ -19,6 +19,9 @@ public class Plato {
 
     private Integer calorias;
 
+    @Column(length = 1000)
+    private String ingredientes;
+
     @OneToMany(mappedBy = "plato")
     private List<PlanPlato> planesDondeAparece;
 
@@ -63,4 +66,8 @@ public class Plato {
     public void setPlanesDondeAparece(List<PlanPlato> planesDondeAparece) {
         this.planesDondeAparece = planesDondeAparece;
     }
+
+    public String getIngredientes() { return ingredientes; }
+
+    public void setIngredientes(String ingredientes) { this.ingredientes = ingredientes; }
 }

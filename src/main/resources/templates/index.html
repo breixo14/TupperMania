@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>TupperMania</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container text-center mt-5">
+    <h1 class="display-4">Bienvenido a TupperMania 🥦</h1>
+    <p class="lead">Planifica tus comidas de forma inteligente.</p>
+
+    <div sec:authorize="isAuthenticated()" class="mt-4">
+        <div class="alert alert-success">
+            <h4>¡Hola, <span sec:authentication="name"></span>!</h4>
+            <p>Bienvenido de nuevo a TupperMania.</p>
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <a href="/perfil/nuevo" class="btn btn-primary btn-lg shadow">
+                📝 Completar mi Perfil Físico
+            </a>
+            <a href="#" class="btn btn-outline-success btn-lg shadow disabled">
+                🥗 Ver mis Dietas (Próximamente)
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
