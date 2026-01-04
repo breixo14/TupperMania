@@ -42,6 +42,11 @@ public class PlanNutricionalService {
         plan.setObjetivo(perfil.getObjetivo().name());
         plan.setCaloriasTotales(calcularCaloriasTotales(dietaDTO));
 
+        if (dietaDTO.getListaCompraConsolidada() != null) {
+            String listaString = String.join(";", dietaDTO.getListaCompraConsolidada());
+            plan.setListaCompraResumida(listaString);
+        }
+
         plan = planRepository.save(plan);
 
         for (DiaDietaDTO diaDTO : dietaDTO.getDias()) {
@@ -57,6 +62,12 @@ public class PlanNutricionalService {
                 plato.setNombre(comidaDTO.getNombrePlato());
                 plato.setDescripcion(comidaDTO.getDescripcion());
                 plato.setCalorias(comidaDTO.getCaloriasAprox());
+
+                if (comidaDTO.getIngredientes() != null) {
+                    plato.setIngredientes(String.join(", ", comidaDTO.getIngredientes()));
+                } else {
+                    plato.setIngredientes("Consultar receta");
+                }
 
                 plato = platoRepository.save(plato);
 

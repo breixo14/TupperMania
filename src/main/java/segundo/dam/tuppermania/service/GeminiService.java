@@ -56,22 +56,42 @@ public class GeminiService {
             
             IMPORTANTE: Responde ÚNICAMENTE con un JSON válido siguiendo ESTRICTAMENTE esta estructura, sin texto adicional ni markdown (no uses ```json):
             {
-              "tituloPlan": "Nombre creativo del plan",
-              "explicacion": "Breve resumen nutricional",
-              "dias": [
                 {
-                  "diaSemana": "LUNES",
-                  "comidas": [
-                    { "tipoComida": "DESAYUNO", "nombrePlato": "Ejemplo", "descripcion": "Breve receta", "caloriasAprox": 300 },
-                    { "tipoComida": "COMIDA", "nombrePlato": "Ejemplo", "descripcion": "Breve receta", "caloriasAprox": 600 },
-                    { "tipoComida": "CENA", "nombrePlato": "Ejemplo", "descripcion": "Breve receta", "caloriasAprox": 400 }
-                  ]
+                "tituloPlan": "Nombre del plan",
+                "explicacion": "Resumen",
+                "listaCompraConsolidada": [
+                                      "12 Huevos (Total semana)",
+                                      "500g de Pechuga de Pollo",
+                                      "1kg de Arroz Integral"
+                                  ],
+                "dias": [
+                    {
+                    "diaSemana": "LUNES",
+                    "comidas": [
+                        {\s
+                            "tipoComida": "DESAYUNO",\s
+                            "nombrePlato": "Tortitas de Avena",\s
+                            "descripcion": "Receta rápida",\s
+                            "caloriasAprox": 300,
+                            "ingredientes": ["50g Avena", "1 Huevo", "Canela"]
+                        }
+                        // ... resto de comidas
+                    ]
+                    }
+                // ... resto de días
+                ]
                 }
                 ... Repetir hasta DOMINGO
                 Asegúrate OBLIGATORIAMENTE de incluir objetos para los 7 días de la semana: LUNES, MARTES, MIERCOLES, JUEVES, VIERNES, SABADO, DOMINGO.
               ]
             }
             Genera al menos Desayuno, Comida y Cena para cada día.
+            
+            INSTRUCCIONES CLAVE PARA LA LISTA DE COMPRA:
+            1. Recorre todas las recetas de la semana.
+            2. Agrupa los ingredientes iguales.
+            3. SUMA sus cantidades (Ej: si el lunes hay 2 huevos y el viernes 2 huevos, pon "4 Huevos" en la lista consolidada).
+            4. Ordena la lista alfabéticamente.
             """.formatted(
                 p.getObjetivo(), p.getPeso(), p.getAltura(), p.getEdad(),
                 p.getNivelActividad(), p.getSexo(),
