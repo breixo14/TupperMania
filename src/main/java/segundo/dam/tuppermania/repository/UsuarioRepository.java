@@ -1,11 +1,11 @@
 package segundo.dam.tuppermania.repository;
 
-import segundo.dam.tuppermania.model.Usuario;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
+import segundo.dam.tuppermania.model.Usuario;
 import java.util.Optional;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     Optional<Usuario> findByCorreo(String correo);
 }
