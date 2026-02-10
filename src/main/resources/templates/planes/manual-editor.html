@@ -28,7 +28,7 @@
                     <div th:with="platoAsignado=${plan.platosAsignados.?[diaSemana == #root.dia && tipoComida == #root.tipo]}">
 
                         <div th:if="${not #lists.isEmpty(platoAsignado)}" class="p-2 bg-success-subtle rounded border border-success">
-                            <strong th:text="${platoAsignado[0].plato.nombre}">Pollo</strong>
+                            <strong th:text="${platoAsignado[0].nombrePlato}">Pollo</strong>
                             <br>
                             <a th:href="@{/planes/manual/seleccionar(idPlan=${plan.idPlan}, dia=${dia}, comida=${tipo})}"
                                class="btn btn-sm btn-outline-dark mt-1" style="font-size: 0.7rem;">🔄 Cambiar</a>

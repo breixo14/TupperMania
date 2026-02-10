@@ -31,17 +31,13 @@
             <div class="list-group mb-4">
                 <div class="list-group-item" th:each="pp : ${plan.platosAsignados}">
                     <div class="form-check">
-                        <input class="form-check-input check-item" type="checkbox" value="" id="check1">
-                        <label class="form-check-label d-block" for="check1">
-                            <strong th:text="${pp.plato.nombre}" class="text-primary">Nombre Plato</strong>
+                        <input class="form-check-input check-item" type="checkbox" value="" th:id="'check_plato_' + ${ppStat.index}">
+                        <label class="form-check-label d-block" th:for="'check_plato_' + ${ppStat.index}">
+                            <strong th:text="${pp.nombrePlato}" class="text-primary">Nombre Plato</strong>
                             <span class="badge bg-secondary ms-2" th:text="${pp.diaSemana}">LUNES</span>
 
-                            <div class="mt-2 p-2 bg-light rounded border">
-                                <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">🛒 Ingredientes:</small>
-                                <br>
-                                <span th:text="${pp.plato.ingredientes}" class="fst-italic text-dark">
-                                    Lista de ingredientes aquí...
-                                </span>
+                            <div class="mt-1">
+                                <small class="text-muted">🔥 <span th:text="${pp.calorias}"></span> kcal</small>
                             </div>
                         </label>
                     </div>
@@ -69,7 +65,7 @@
                     </ul>
 
                     <div th:if="${#lists.isEmpty(totalIngredientes)}" class="text-center text-muted mt-3">
-                        <em>No hay resumen consolidado disponible para este plan (quizás es un plan antiguo).</em>
+                        <em>No hay resumen consolidado disponible para este plan.</em>
                     </div>
                 </div>
             </div>
