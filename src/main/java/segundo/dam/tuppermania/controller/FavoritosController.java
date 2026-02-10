@@ -9,6 +9,7 @@ import segundo.dam.tuppermania.model.Plato;
 import segundo.dam.tuppermania.model.Usuario;
 import segundo.dam.tuppermania.repository.PlatoRepository;
 import segundo.dam.tuppermania.repository.UsuarioRepository;
+import java.util.Optional;
 
 /**
  * Controlador encargado de la gestión de preferencias del usuario (Lista de deseos/Favoritos).
@@ -34,18 +35,22 @@ public class FavoritosController {
      * @return Redirección a la página anterior o a la lista de planes por defecto.
      */
     @GetMapping("/toggle/{idPlato}")
-    public String toggleFavorito(@PathVariable Long idPlato, Authentication auth, @RequestHeader(value = "referer", required = false) String referer) {
+    public String toggleFavorito(@PathVariable String idPlato, Authentication auth, @RequestHeader(value = "referer", required = false) String referer) {
         Usuario usuario = usuarioRepository.findByCorreo(auth.getName()).orElseThrow();
         Plato plato = platoRepository.findById(idPlato).orElseThrow();
 
-        if (usuario.getPlatosFavoritos().contains(plato)) {
-            usuario.getPlatosFavoritos().remove(plato); // Quitar
+        // En Mongo, comparamos mejor por ID explícito para evitar problemas de instancias
+        Optional<Plato> existente = usuario.getPlatosFavoritos().stream()
+                .filter(p -> p.getIdPlato().equals(idPlato))
+                .findFirst();
+
+        if (existente.isPresent()) {
+            usuario.getPlatosFavoritos().remove(existente.get()); // Quitar
         } else {
             usuario.getPlatosFavoritos().add(plato); // Añadir
         }
 
         usuarioRepository.save(usuario);
-
         return "redirect:" + (referer != null ? referer : "/planes");
     }
 

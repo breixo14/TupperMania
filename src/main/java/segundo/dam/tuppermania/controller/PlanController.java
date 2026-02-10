@@ -47,14 +47,13 @@ public class PlanController {
      * Inyecta también la lista de favoritos para permitir marcarlos directamente desde la vista.
      */
     @GetMapping("/{id}")
-    public String verPlan(@PathVariable Long id, Model model, Authentication auth) {
+    public String verPlan(@PathVariable String id, Model model, Authentication auth) {
         PlanNutricional plan = planService.obtenerPlanPorId(id);
 
-        // Recuperar usuario para saber sus favoritos
         Usuario usuario = usuarioRepository.findByCorreo(auth.getName()).orElseThrow();
 
-        // Crear lista de IDs de platos favoritos
-        List<Long> idsFavoritos = usuario.getPlatosFavoritos().stream()
+        // Extraemos los IDs (Strings) de los favoritos para marcarlos en la vista
+        List<String> idsFavoritos = usuario.getPlatosFavoritos().stream()
                 .map(Plato::getIdPlato)
                 .collect(Collectors.toList());
 
@@ -67,13 +66,13 @@ public class PlanController {
     }
 
     @GetMapping("/borrar/{id}")
-    public String borrarPlan(@PathVariable Long id) {
+    public String borrarPlan(@PathVariable String id) {
         planNutricionalRepository.deleteById(id);
         return "redirect:/planes";
     }
 
     @GetMapping("/editar/{id}")
-    public String editarPlan(@PathVariable Long id) {
+    public String editarPlan(@PathVariable String id) {
         return "redirect:/planes/manual/editor/" + id;
     }
 
@@ -82,7 +81,7 @@ public class PlanController {
      * Parsea el string consolidado de ingredientes para mostrarlo como lista de check.
      */
     @GetMapping("/{id}/lista-compra")
-    public String verListaCompra(@PathVariable Long id, Model model) {
+    public String verListaCompra(@PathVariable String id, Model model) {
         PlanNutricional plan = planService.obtenerPlanPorId(id);
 
         List<String> totalIngredientes = new ArrayList<>();

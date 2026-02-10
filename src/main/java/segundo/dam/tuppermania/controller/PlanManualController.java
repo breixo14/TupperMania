@@ -38,15 +38,16 @@ public class PlanManualController {
     public String crearEsqueletoPlan(@ModelAttribute PlanNutricional plan, Authentication auth) {
         Usuario usuario = usuarioRepository.findByCorreo(auth.getName()).orElseThrow();
 
-        plan.setUsuario(usuario);
+        plan.setUsuarioId(usuario.getIdUsuario());
         plan.setCaloriasTotales(0);
+
         plan = planRepository.save(plan);
 
         return "redirect:/planes/manual/editor/" + plan.getIdPlan();
     }
 
     @GetMapping("/editor/{id}")
-    public String editorPlan(@PathVariable Long id, Model model) {
+    public String editorPlan(@PathVariable String id, Model model) {
         PlanNutricional plan = planService.obtenerPlanPorId(id);
 
         model.addAttribute("plan", plan);
@@ -65,7 +66,7 @@ public class PlanManualController {
      * (Favoritos vs Todos) mediante parámetros de control en el modelo.
      */
     @GetMapping("/seleccionar")
-    public String seleccionarPlato(@RequestParam Long idPlan,
+    public String seleccionarPlato(@RequestParam String idPlan,
                                    @RequestParam String dia,
                                    @RequestParam String comida,
                                    @RequestParam(required = false) String busqueda,
@@ -78,7 +79,6 @@ public class PlanManualController {
         model.addAttribute("comida", comida);
         model.addAttribute("favoritos", usuario.getPlatosFavoritos());
 
-        // Lógica de filtrado para la búsqueda
         if (busqueda != null && !busqueda.isEmpty()) {
             model.addAttribute("todosLosPlatos", platoRepository.findByNombreContainingIgnoreCase(busqueda));
             model.addAttribute("busquedaActual", busqueda);
@@ -92,8 +92,8 @@ public class PlanManualController {
     }
 
     @GetMapping("/asignar/{idPlato}")
-    public String asignarPlato(@PathVariable Long idPlato,
-                               @RequestParam Long idPlan,
+    public String asignarPlato(@PathVariable String idPlato,
+                               @RequestParam String idPlan,
                                @RequestParam String dia,
                                @RequestParam String comida) {
 

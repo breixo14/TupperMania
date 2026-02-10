@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import segundo.dam.tuppermania.model.PerfilFisico;
 import segundo.dam.tuppermania.model.Usuario;
-import segundo.dam.tuppermania.repository.PerfilFisicoRepository;
+import segundo.dam.tuppermania.model.enums.NivelActividad;
+import segundo.dam.tuppermania.model.enums.Objetivo;
+import segundo.dam.tuppermania.model.enums.Sexo;
 import segundo.dam.tuppermania.repository.UsuarioRepository;
 
 /**
@@ -23,8 +25,7 @@ public class PerfilController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private PerfilFisicoRepository perfilRepository;
+    // ELIMINADO: PerfilFisicoRepository (ya no se usa, el perfil va dentro del usuario)
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -33,11 +34,17 @@ public class PerfilController {
     public String mostrarFormularioPerfil(Model model, Authentication auth) {
         Usuario usuario = usuarioRepository.findByCorreo(auth.getName()).orElseThrow();
 
+        // Pasamos al modelo el perfil existente o uno nuevo vacío
         if (usuario.getPerfilFisico() != null) {
             model.addAttribute("perfil", usuario.getPerfilFisico());
         } else {
             model.addAttribute("perfil", new PerfilFisico());
         }
+
+        // Añadimos los Enums al modelo por si la vista los necesita para los selects
+        model.addAttribute("sexos", Sexo.values());
+        model.addAttribute("nivelesActividad", NivelActividad.values());
+        model.addAttribute("objetivos", Objetivo.values());
 
         return "perfil/formulario";
     }
@@ -46,16 +53,15 @@ public class PerfilController {
     public String guardarPerfil(@ModelAttribute PerfilFisico perfil, Authentication auth) {
         Usuario usuario = usuarioRepository.findByCorreo(auth.getName()).orElseThrow();
 
-        if (usuario.getPerfilFisico() != null) {
-            perfil.setIdPerfil(usuario.getPerfilFisico().getIdPerfil());
-        }
+        // LÓGICA MONGO:
+        // 1. No gestionamos IDs de perfil (es un objeto embebido).
+        // 2. No gestionamos relación inversa (perfil.setUsuario).
+        // 3. Simplemente actualizamos el campo en el documento Usuario.
 
-        perfil.setUsuario(usuario);
-        perfil = perfilRepository.save(perfil);
         usuario.setPerfilFisico(perfil);
-        usuarioRepository.save(usuario);
+        usuarioRepository.save(usuario); // Esto actualiza todo el documento en Mongo
 
-        System.out.println("✅ Perfil guardado y VINCULADO correctamente para: " + usuario.getNombreUsuario());
+        System.out.println("✅ Perfil físico actualizado para: " + usuario.getNombreUsuario());
 
         return "redirect:/planes";
     }

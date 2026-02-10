@@ -5,12 +5,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import segundo.dam.tuppermania.model.Plato;
 import segundo.dam.tuppermania.model.Usuario;
 import segundo.dam.tuppermania.model.enums.Rol;
 import segundo.dam.tuppermania.repository.PlatoRepository;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import segundo.dam.tuppermania.repository.UsuarioRepository;
 
 /**
@@ -31,14 +30,23 @@ public class AdminController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // --- GESTIÓN DE PLATOS ---
+
     @GetMapping("/platos")
     public String listarPlatos(Model model) {
         model.addAttribute("platos", platoRepository.findAll());
         return "admin/platos-lista";
     }
 
+    @GetMapping("/platos/nuevo")
+    public String nuevoPlato(Model model) {
+        model.addAttribute("plato", new Plato());
+        return "admin/platos-form";
+    }
+
+    // CAMBIO: ID es String
     @GetMapping("/platos/editar/{id}")
-    public String editarPlato(@PathVariable Long id, Model model) {
+    public String editarPlato(@PathVariable String id, Model model) {
         Plato plato = platoRepository.findById(id).orElseThrow();
         model.addAttribute("plato", plato);
         return "admin/platos-form";
@@ -50,45 +58,24 @@ public class AdminController {
         return "redirect:/admin/platos";
     }
 
-    /**
-     * Intenta eliminar un plato controlando la integridad referencial.
-     * Si el plato se usa en alguna dieta de usuario, impide el borrado.
-     */
+    // CAMBIO: ID es String y quitamos DataIntegrityViolationException (SQL)
     @GetMapping("/platos/borrar/{id}")
-    public String borrarPlato(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String borrarPlato(@PathVariable String id, RedirectAttributes redirectAttributes) {
         try {
             platoRepository.deleteById(id);
             redirectAttributes.addFlashAttribute("mensajeExito", "✅ Plato eliminado correctamente.");
-        } catch (DataIntegrityViolationException e) {
-            redirectAttributes.addFlashAttribute("mensajeError", "⛔ No se puede eliminar: Este plato está asignado a la dieta de un usuario actualmente.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeError", "⚠️ Error al eliminar el plato: " + e.getMessage());
         }
-
         return "redirect:/admin/platos";
     }
 
-    @GetMapping("/platos/nuevo")
-    public String nuevoPlato(Model model) {
-        model.addAttribute("plato", new Plato());
-        return "admin/platos-form";
-    }
+    // --- GESTIÓN DE USUARIOS ---
 
     @GetMapping("/usuarios")
     public String listarUsuarios(Model model) {
         model.addAttribute("usuarios", usuarioRepository.findAll());
         return "admin/usuarios-lista";
-    }
-
-    @GetMapping("/usuarios/borrar/{id}")
-    public String borrarUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try {
-            usuarioRepository.deleteById(id);
-            redirectAttributes.addFlashAttribute("mensajeExito", "✅ Usuario eliminado y sus datos asociados.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensajeError", "⚠️ No se pudo eliminar al usuario. Puede tener dependencias activas.");
-        }
-        return "redirect:/admin/usuarios";
     }
 
     @GetMapping("/usuarios/nuevo")
@@ -100,18 +87,33 @@ public class AdminController {
 
     @PostMapping("/usuarios/guardar")
     public String guardarUsuario(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
-        try {
-            if (usuario.getIdUsuario() == null || !usuario.getContrasena().isEmpty()) {
-                usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
-            } else {
-                // Lógica para edición si la contraseña viene vacía (mantener la vieja)
-                // Para creación simple, siempre exigimos contraseña.
-            }
+        // En Mongo, si el ID es null o vacío, crea uno nuevo.
+        if (usuario.getIdUsuario() == null || usuario.getIdUsuario().isEmpty()) {
+            usuario.setIdUsuario(null); // Asegurar que sea null para creación
+        }
 
+        // Solo encriptamos si la contraseña no está vacía (edición) o es nuevo
+        if (usuario.getContrasena() != null && !usuario.getContrasena().isEmpty()) {
+            usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
+        }
+
+        try {
             usuarioRepository.save(usuario);
             redirectAttributes.addFlashAttribute("mensajeExito", "✅ Usuario guardado correctamente.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("mensajeError", "⚠️ Error: El correo probablemente ya existe.");
+            redirectAttributes.addFlashAttribute("mensajeError", "⚠️ Error al guardar usuario.");
+        }
+        return "redirect:/admin/usuarios";
+    }
+
+    // CAMBIO: ID es String
+    @GetMapping("/usuarios/borrar/{id}")
+    public String borrarUsuario(@PathVariable String id, RedirectAttributes redirectAttributes) {
+        try {
+            usuarioRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("mensajeExito", "✅ Usuario eliminado.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensajeError", "⚠️ No se pudo eliminar al usuario.");
         }
         return "redirect:/admin/usuarios";
     }

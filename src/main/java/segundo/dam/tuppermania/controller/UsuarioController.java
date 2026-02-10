@@ -31,7 +31,7 @@ public class UsuarioController {
 
     // 2. GET: Obtener uno por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> obtenerPorId(@PathVariable Long id) {
+    public ResponseEntity<Usuario> obtenerPorId(@PathVariable String id) {
         return usuarioRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -50,7 +50,7 @@ public class UsuarioController {
 
     // 4. PUT: Actualizar usuario existente
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioDetalles) {
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable String id, @RequestBody Usuario usuarioDetalles) {
         return usuarioRepository.findById(id).map(usuario -> {
             usuario.setNombreUsuario(usuarioDetalles.getNombreUsuario());
             usuario.setCorreo(usuarioDetalles.getCorreo());
@@ -71,7 +71,7 @@ public class UsuarioController {
 
     // 5. DELETE: Borrar usuario
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarUsuario(@PathVariable String id) {
         if (usuarioRepository.existsById(id)) {
             usuarioRepository.deleteById(id);
             return ResponseEntity.noContent().build();
