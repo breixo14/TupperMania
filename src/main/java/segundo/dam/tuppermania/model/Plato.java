@@ -1,78 +1,38 @@
 package segundo.dam.tuppermania.model;
 
-import jakarta.persistence.*;
-import java.util.List;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Representa una receta o alimento individual disponible en el sistema.
  * Actúa como la unidad básica para la construcción de dietas.
  * Contiene información nutricional y detalles de preparación/ingredientes.
  */
-@Entity
-@Table(name = "plato")
+@Document(collection = "platos")
 public class Plato {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_plato")
-    private Long idPlato; // Refactorizado a camelCase
+    private String idPlato; // Cambiado a String (ObjectID)
 
     private String nombre;
-
-    @Column(columnDefinition = "TEXT")
     private String descripcion;
-
     private Integer calorias;
-
-    @Column(length = 1000)
     private String ingredientes;
 
-    @OneToMany(mappedBy = "plato")
-    private List<PlanPlato> planesDondeAparece;
+    // --- GETTERS Y SETTERS ---
 
-    // --- GETTERS Y SETTERS ACTUALIZADOS ---
+    public String getIdPlato() { return idPlato; }
+    public void setIdPlato(String idPlato) { this.idPlato = idPlato; }
 
-    public Long getIdPlato() {
-        return idPlato;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public void setIdPlato(Long idPlato) {
-        this.idPlato = idPlato;
-    }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public Integer getCalorias() {
-        return calorias;
-    }
-
-    public void setCalorias(Integer calorias) {
-        this.calorias = calorias;
-    }
-
-    public List<PlanPlato> getPlanesDondeAparece() {
-        return planesDondeAparece;
-    }
-
-    public void setPlanesDondeAparece(List<PlanPlato> planesDondeAparece) {
-        this.planesDondeAparece = planesDondeAparece;
-    }
+    public Integer getCalorias() { return calorias; }
+    public void setCalorias(Integer calorias) { this.calorias = calorias; }
 
     public String getIngredientes() { return ingredientes; }
-
     public void setIngredientes(String ingredientes) { this.ingredientes = ingredientes; }
 }

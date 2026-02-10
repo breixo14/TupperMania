@@ -1,78 +1,46 @@
 package segundo.dam.tuppermania.model;
 
-import jakarta.persistence.*;
 import segundo.dam.tuppermania.model.enums.DiaSemana;
 import segundo.dam.tuppermania.model.enums.TipoComida;
 
-/**
- * Entidad intermedia que resuelve la relación N:N entre PlanNutricional y Plato.
- * A diferencia de una relación @ManyToMany estándar, esta entidad añade atributos
- * contextuales cruciales: el día de la semana y el tipo de comida (Desayuno, Cena...).
- */
-@Entity
-@Table(name = "plan_plato")
+
 public class PlanPlato {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_plan_plato")
-    private Long idPlanPlato;
-
-    @ManyToOne
-    @JoinColumn(name = "id_plan")
-    private PlanNutricional plan;
-
-    @ManyToOne
-    @JoinColumn(name = "id_plato")
-    private Plato plato;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "dia_semana")
+    // Datos de la relación (Cuándo se come)
     private DiaSemana diaSemana;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_comida")
     private TipoComida tipoComida;
 
-    // --- GETTERS Y SETTERS (Añadidos para que funcione el proyecto) ---
+    // Datos del Plato (Snapshot + Referencia)
+    private String platoId;       // ID del plato original en Mongo
+    private String nombrePlato;   // Copia del nombre por si cambia el original
+    private Integer calorias;     // Copia de calorias
 
-    public Long getIdPlanPlato() {
-        return idPlanPlato;
+    // --- CONSTRUCTORES ---
+    public PlanPlato() {}
+
+    public PlanPlato(DiaSemana dia, TipoComida tipo, Plato platoOriginal) {
+        this.diaSemana = dia;
+        this.tipoComida = tipo;
+        if (platoOriginal != null) {
+            this.platoId = platoOriginal.getIdPlato();
+            this.nombrePlato = platoOriginal.getNombre();
+            this.calorias = platoOriginal.getCalorias();
+        }
     }
 
-    public void setIdPlanPlato(Long idPlanPlato) {
-        this.idPlanPlato = idPlanPlato;
-    }
+    // --- GETTERS Y SETTERS ---
+    public DiaSemana getDiaSemana() { return diaSemana; }
+    public void setDiaSemana(DiaSemana diaSemana) { this.diaSemana = diaSemana; }
 
-    public PlanNutricional getPlan() {
-        return plan;
-    }
+    public TipoComida getTipoComida() { return tipoComida; }
+    public void setTipoComida(TipoComida tipoComida) { this.tipoComida = tipoComida; }
 
-    public void setPlan(PlanNutricional plan) {
-        this.plan = plan;
-    }
+    public String getPlatoId() { return platoId; }
+    public void setPlatoId(String platoId) { this.platoId = platoId; }
 
-    public Plato getPlato() {
-        return plato;
-    }
+    public String getNombrePlato() { return nombrePlato; }
+    public void setNombrePlato(String nombrePlato) { this.nombrePlato = nombrePlato; }
 
-    public void setPlato(Plato plato) {
-        this.plato = plato;
-    }
-
-    public DiaSemana getDiaSemana() {
-        return diaSemana;
-    }
-
-    public void setDiaSemana(DiaSemana diaSemana) {
-        this.diaSemana = diaSemana;
-    }
-
-    public TipoComida getTipoComida() {
-        return tipoComida;
-    }
-
-    public void setTipoComida(TipoComida tipoComida) {
-        this.tipoComida = tipoComida;
-    }
+    public Integer getCalorias() { return calorias; }
+    public void setCalorias(Integer calorias) { this.calorias = calorias; }
 }
