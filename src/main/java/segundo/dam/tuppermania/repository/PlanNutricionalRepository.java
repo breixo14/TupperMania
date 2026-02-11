@@ -8,6 +8,8 @@ import java.util.List;
 @Repository
 public interface PlanNutricionalRepository extends MongoRepository<PlanNutricional, String> {
 
-    // Busca planes donde el campo 'usuarioId' coincida
     List<PlanNutricional> findByUsuarioId(String usuarioId);
+
+    // CONSULTA SIMPLE 2: Buscar planes dentro de un rango calórico
+    List<PlanNutricional> findByCaloriasTotalesBetween(Integer min, Integer max);
 }
