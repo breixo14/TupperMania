@@ -65,16 +65,21 @@ public class ConsultasRepositoryImpl implements ConsultasRepository {
     @Override
     public List<Map> obtenerUsuariosSinPlanes() {
         /*
-         * PIPELINE (LOOKUP):
-         * 1. $lookup: Une usuarios con planes (Left Outer Join).
-         * 2. $match: Filtra aquellos donde el array de planes esté vacío (size 0).
-         * 3. $project: Muestra solo nombre y correo.
-         * 4. $limit: Limitamos por seguridad.
+         * PIPELINE:
+         * 1. $addFields: Crea un campo temporal convirtiendo el _id (ObjectId) a String.
+         * 2. $lookup: Une usando el nuevo campo de texto con el usuarioId del plan.
+         * 3. $match: Filtra aquellos donde el array de planes esté vacío (size 0).
+         * 4. $project: Muestra solo nombre y correo.
+         * 5. $limit: Limitamos por seguridad.
          */
+
+        org.springframework.data.mongodb.core.aggregation.AggregationOperation convertirIdAString =
+                context -> new org.bson.Document("$addFields",
+                        new org.bson.Document("idString", new org.bson.Document("$toString", "$_id")));
+
         Aggregation agg = newAggregation(
-                // Convertimos el _id de usuario a String para que coincida con usuarioId del plan si fuera necesario,
-                // pero como guardamos usuarioId como String en el plan, el lookup directo funciona.
-                lookup("planes_nutricionales", "_id", "usuarioId", "planes_usuario"),
+                convertirIdAString,
+                lookup("planes_nutricionales", "idString", "usuarioId", "planes_usuario"),
                 match(org.springframework.data.mongodb.core.query.Criteria.where("planes_usuario").size(0)),
                 project("nombreUsuario", "correo"),
                 limit(50)
