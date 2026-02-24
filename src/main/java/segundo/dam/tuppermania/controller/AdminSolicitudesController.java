@@ -29,6 +29,25 @@ public class AdminSolicitudesController {
         solicitud.setEstado(nuevoEstado);
         solicitudRepository.save(solicitud);
 
+        try {
+            java.util.regex.Matcher matcher = java.util.regex.Pattern
+                    .compile("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
+                    .matcher(solicitud.getMensajeOriginal());
+
+            String correoExtraido = matcher.find() ? matcher.group() : "null";
+
+            java.util.Map<String, String> payloadN8n = java.util.Map.of(
+                    "chatId", solicitud.getUsuarioTelegram(),
+                    "correo", correoExtraido
+            );
+
+            org.springframework.web.client.RestTemplate restTemplate = new org.springframework.web.client.RestTemplate();
+            String urlN8n = "https://nainlopez.app.n8n.cloud/webhook-test/api/webhook/procesar-dieta";
+            restTemplate.postForEntity(urlN8n, payloadN8n, String.class);
+        } catch (Exception e) {
+            System.out.println("❌ Error avisando a n8n: " + e.getMessage());
+        }
+
         return "redirect:/admin/solicitudes";
     }
 }

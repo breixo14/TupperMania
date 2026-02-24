@@ -11,7 +11,7 @@ public class SolicitudChat {
     @Id
     private String id;
     private String nombreCliente;
-    private String usuarioDiscord;
+    private String usuarioTelegram;
 
     private String intencion; // Ej: "Crear plan nutricional"
     private String datosExtraidos; // Ej: "1500 calorias, vegano"
@@ -25,8 +25,8 @@ public class SolicitudChat {
     public void setId(String id) { this.id = id; }
     public String getNombreCliente() { return nombreCliente; }
     public void setNombreCliente(String nombreCliente) { this.nombreCliente = nombreCliente; }
-    public String getUsuarioDiscord() { return usuarioDiscord; }
-    public void setUsuarioDiscord(String usuarioDiscord) { this.usuarioDiscord = usuarioDiscord; }
+    public String getUsuarioTelegram() { return usuarioTelegram; }
+    public void setUsuarioTelegram(String usuarioTelegram) { this.usuarioTelegram = usuarioTelegram; }
     public String getIntencion() { return intencion; }
     public void setIntencion(String intencion) { this.intencion = intencion; }
     public String getDatosExtraidos() { return datosExtraidos; }
