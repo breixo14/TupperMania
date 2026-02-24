@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Plato {
 
     @Id
-    private String idPlato; // Cambiado a String (ObjectID)
+    private String idPlato;
 
     private String nombre;
     private String descripcion;

@@ -44,7 +44,6 @@ public class AdminController {
         return "admin/platos-form";
     }
 
-    // CAMBIO: ID es String
     @GetMapping("/platos/editar/{id}")
     public String editarPlato(@PathVariable String id, Model model) {
         Plato plato = platoRepository.findById(id).orElseThrow();
@@ -58,7 +57,6 @@ public class AdminController {
         return "redirect:/admin/platos";
     }
 
-    // CAMBIO: ID es String y quitamos DataIntegrityViolationException (SQL)
     @GetMapping("/platos/borrar/{id}")
     public String borrarPlato(@PathVariable String id, RedirectAttributes redirectAttributes) {
         try {
@@ -69,8 +67,6 @@ public class AdminController {
         }
         return "redirect:/admin/platos";
     }
-
-    // --- GESTIÓN DE USUARIOS ---
 
     @GetMapping("/usuarios")
     public String listarUsuarios(Model model) {
@@ -87,12 +83,10 @@ public class AdminController {
 
     @PostMapping("/usuarios/guardar")
     public String guardarUsuario(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
-        // En Mongo, si el ID es null o vacío, crea uno nuevo.
         if (usuario.getIdUsuario() == null || usuario.getIdUsuario().isEmpty()) {
-            usuario.setIdUsuario(null); // Asegurar que sea null para creación
+            usuario.setIdUsuario(null);
         }
 
-        // Solo encriptamos si la contraseña no está vacía (edición) o es nuevo
         if (usuario.getContrasena() != null && !usuario.getContrasena().isEmpty()) {
             usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
         }
@@ -106,7 +100,6 @@ public class AdminController {
         return "redirect:/admin/usuarios";
     }
 
-    // CAMBIO: ID es String
     @GetMapping("/usuarios/borrar/{id}")
     public String borrarUsuario(@PathVariable String id, RedirectAttributes redirectAttributes) {
         try {

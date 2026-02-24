@@ -6,16 +6,14 @@ import segundo.dam.tuppermania.model.enums.TipoComida;
 
 public class PlanPlato {
 
-    // Datos de la relación (Cuándo se come)
     private DiaSemana diaSemana;
     private TipoComida tipoComida;
 
-    // Datos del Plato (Snapshot + Referencia)
-    private String platoId;       // ID del plato original en Mongo
-    private String nombrePlato;   // Copia del nombre por si cambia el original
-    private Integer calorias;     // Copia de calorias
+    private String platoId;
+    private String nombrePlato;
+    private Integer calorias;
 
-    // --- CONSTRUCTORES ---
+
     public PlanPlato() {}
 
     public PlanPlato(DiaSemana dia, TipoComida tipo, Plato platoOriginal) {

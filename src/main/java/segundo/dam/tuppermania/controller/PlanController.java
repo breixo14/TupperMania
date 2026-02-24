@@ -52,7 +52,6 @@ public class PlanController {
 
         Usuario usuario = usuarioRepository.findByCorreo(auth.getName()).orElseThrow();
 
-        // Extraemos los IDs (Strings) de los favoritos para marcarlos en la vista
         List<String> idsFavoritos = usuario.getPlatosFavoritos().stream()
                 .map(Plato::getIdPlato)
                 .collect(Collectors.toList());

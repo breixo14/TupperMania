@@ -39,15 +39,14 @@ public class FavoritosController {
         Usuario usuario = usuarioRepository.findByCorreo(auth.getName()).orElseThrow();
         Plato plato = platoRepository.findById(idPlato).orElseThrow();
 
-        // En Mongo, comparamos mejor por ID explícito para evitar problemas de instancias
         Optional<Plato> existente = usuario.getPlatosFavoritos().stream()
                 .filter(p -> p.getIdPlato().equals(idPlato))
                 .findFirst();
 
         if (existente.isPresent()) {
-            usuario.getPlatosFavoritos().remove(existente.get()); // Quitar
+            usuario.getPlatosFavoritos().remove(existente.get());
         } else {
-            usuario.getPlatosFavoritos().add(plato); // Añadir
+            usuario.getPlatosFavoritos().add(plato);
         }
 
         usuarioRepository.save(usuario);

@@ -25,8 +25,6 @@ public class PerfilController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // ELIMINADO: PerfilFisicoRepository (ya no se usa, el perfil va dentro del usuario)
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -34,14 +32,12 @@ public class PerfilController {
     public String mostrarFormularioPerfil(Model model, Authentication auth) {
         Usuario usuario = usuarioRepository.findByCorreo(auth.getName()).orElseThrow();
 
-        // Pasamos al modelo el perfil existente o uno nuevo vacío
         if (usuario.getPerfilFisico() != null) {
             model.addAttribute("perfil", usuario.getPerfilFisico());
         } else {
             model.addAttribute("perfil", new PerfilFisico());
         }
 
-        // Añadimos los Enums al modelo por si la vista los necesita para los selects
         model.addAttribute("sexos", Sexo.values());
         model.addAttribute("nivelesActividad", NivelActividad.values());
         model.addAttribute("objetivos", Objetivo.values());
@@ -53,13 +49,8 @@ public class PerfilController {
     public String guardarPerfil(@ModelAttribute PerfilFisico perfil, Authentication auth) {
         Usuario usuario = usuarioRepository.findByCorreo(auth.getName()).orElseThrow();
 
-        // LÓGICA MONGO:
-        // 1. No gestionamos IDs de perfil (es un objeto embebido).
-        // 2. No gestionamos relación inversa (perfil.setUsuario).
-        // 3. Simplemente actualizamos el campo en el documento Usuario.
-
         usuario.setPerfilFisico(perfil);
-        usuarioRepository.save(usuario); // Esto actualiza todo el documento en Mongo
+        usuarioRepository.save(usuario);
 
         System.out.println("✅ Perfil físico actualizado para: " + usuario.getNombreUsuario());
 
@@ -80,19 +71,16 @@ public class PerfilController {
 
         Usuario usuario = usuarioRepository.findByCorreo(auth.getName()).orElseThrow();
 
-        // Verificar que la contraseña actual es correcta
         if (!passwordEncoder.matches(actual, usuario.getContrasena())) {
             redirectAttributes.addFlashAttribute("mensajeError", "⛔ La contraseña actual no es correcta.");
             return "redirect:/perfil/contrasena";
         }
 
-        // Verificar que la nueva y la confirmación coinciden
         if (!nueva.equals(confirmacion)) {
             redirectAttributes.addFlashAttribute("mensajeError", "⚠️ Las nuevas contraseñas no coinciden.");
             return "redirect:/perfil/contrasena";
         }
 
-        // Guardar la nueva contraseña encriptada
         usuario.setContrasena(passwordEncoder.encode(nueva));
         usuarioRepository.save(usuario);
 

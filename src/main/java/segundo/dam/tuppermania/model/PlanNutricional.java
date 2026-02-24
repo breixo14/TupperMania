@@ -23,10 +23,8 @@ public class PlanNutricional {
     private Integer caloriasTotales;
     private String listaCompraResumida;
 
-    // Relación con Usuario (Referencia por ID para evitar anidamiento infinito)
     private String usuarioId;
 
-    // LISTA EMBEBIDA: Aquí viven las comidas del plan
     private List<PlanPlato> platosAsignados = new ArrayList<>();
 
     // --- GETTERS Y SETTERS ---
